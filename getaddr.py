@@ -1,7 +1,14 @@
 import sys
 import subprocess
+from firebase import firebase
+
+import urllib2, urllib, httplib
+import json
+import os 
+from functools import partial
 
 interface = "wlan0"
+firebase = firebase.FirebaseApplication('https://le615-d865e.firebaseio.com/', None)
 
 def get_address(cell):
     return matching_line(cell,"Address: ")
@@ -38,6 +45,12 @@ def parse_cell(cell):
         parsed_cell.update({key:rule(cell)})
     return parsed_cell
 
+def update_firebase():
+
+	data = 'Beam here !'   #insert own name room
+	firebase.post('/scanwifi', data)
+	
+
 
 def main():
     """Pretty prints the output of iwlist scan into a table"""
@@ -65,7 +78,7 @@ def main():
         
     beam = {'Address' : 'B8:57:D8:A3:F3:B2'}
     for sc in range(len(parsed_cells)) :
-         print(parsed_cells[sc])
+         #when enter the room
          if parsed_cells[sc] == beam:
-           print('Beam here !')
+           update_firebase()
 main()
