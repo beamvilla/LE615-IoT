@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while true ; do
-        if ifconfig wlan0 | grep -q "inet 10.6.1.9" ; then
+        if ifconfig wlan0 | grep -q "inet" ; then
                 echo "Reconnect"
                 break
         else
