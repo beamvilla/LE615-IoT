@@ -11,7 +11,7 @@ from pytz import timezone
 from subprocess import check_output
 
 interface = "wlan0"
-firebase = firebase.FirebaseApplication('https://le615-d865e.firebaseio.com/', None)
+firebase = firebase.FirebaseApplication('https://le615-d865e.firebaseio.com/', None) #change to the prof. link
 
 def get_address(cell):
     return matching_line(cell,"Address: ")
@@ -48,6 +48,9 @@ def parse_cell(cell):
         parsed_cell.update({key:rule(cell)})
     return parsed_cell
 
+def connectwifi():
+    subprocess.call(['./reconnect.sh'])
+
 def main():
     """Pretty prints the output of iwlist scan into a table"""
 
@@ -70,15 +73,15 @@ def main():
     for cell in cells:
         parsed_cells.append(parse_cell(cell))
 
-    beam = {'Address' : 'B8:57:D8:A3:F3:B2'}
+    beam = {'Address' : 'B8:57:D8:A3:F3:B2'}    #change to own'room
     bew =  {'Address' : 'BE:54:36:07:E7:8A'}
     tz = timezone('Asia/Bangkok')
 
     for sc in range(len(parsed_cells)) :
          print(parsed_cells[sc])
          if parsed_cells[sc] == beam and parsed_cells[sc] == bew :
-           #connectwifi()
-            data1 = 'Beam here !'
+            connectwifi()
+            data1 = 'Beam here !' 
             data2 = 'Bew here !'
             now = datetime.now(tz)
             dt = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -86,7 +89,7 @@ def main():
             firebase.post('/scanwifi',{'Timestamps':dt,'who':data2})
             break
          elif parsed_cells[sc] == beam:
-           #connectwifi()
+            connectwifi()
             data = 'Beam here !'   #insert own name room
             now = datetime.now(tz)
             dt = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -94,7 +97,7 @@ def main():
             break
 
          elif parsed_cells[sc] == bew:
-            #connectwifi()
+            connectwifi()
             data = 'Bew here !'   #insert own name room
             now = datetime.now(tz)
             dt = now.strftime("%d/%m/%Y %H:%M:%S")
